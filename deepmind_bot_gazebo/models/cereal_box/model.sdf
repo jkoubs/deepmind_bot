@@ -1,0 +1,30 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='cereal_box'>
+    <link name='link_1'>
+         <visual name='visual'>
+        <pose frame=''>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://cereal_box/meshes/cereal_box.dae</uri>            
+            <scale>0.8 0.8 0.8</scale>
+          </mesh>
+        </geometry>
+        <cast_shadows>0</cast_shadows>
+        <transparency>0</transparency>
+      </visual>
+            <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://cereal_box/meshes/cereal_box.dae</uri>            
+            <scale>0.8 0.8 0.8</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      
+    </link>
+
+    <static>1</static>
+    <allow_auto_disable>1</allow_auto_disable>
+  </model>
+</sdf>

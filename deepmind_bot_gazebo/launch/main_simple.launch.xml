@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <include file="$(find-pkg-share deepmind_bot_gazebo)/launch/start_world.launch.py">
+        <arg name="world" value="$(find-pkg-share deepmind_bot_gazebo)/worlds/simple.world"/>
+        <arg name="gzweb" value="True"/>
+    </include>
+
+    <include file="$(find-pkg-share deepmind_bot_gazebo)/launch/spawn.launch.xml">
+            <arg name="robot_name" value="deepmind_robot1"/>
+            <arg name="x_spawn" value="0.0"/>
+            <arg name="y_spawn" value="0.0"/>
+            <arg name="z_spawn" value="0.04"/>
+            <arg name="roll_spawn" value="0.0"/>
+            <arg name="pitch_spawn" value="0.0"/>
+            <arg name="yaw_spawn" value="0.0"/>
+    </include>
+
+    <include file="$(find-pkg-share deepmind_bot_description)/launch/start_control.launch.py"/>
+
+
+</launch>

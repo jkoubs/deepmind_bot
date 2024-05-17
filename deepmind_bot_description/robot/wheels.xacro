@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Wheels-->
+    <xacro:macro  name="wheel" params="parent child origin_xyz robot_name name_wheel_link r l incr">
+      <link name="${robot_name}_${name_wheel_link}">
+          <inertial>
+            <mass value="0.2"/>
+            <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+              <xacro:cylinder_inertia mass="0.2" r="${r}" l="${l}" />
+          </inertial>
+          <collision name="${robot_name}_${name_wheel_link}_collision">
+            <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+            <geometry>
+              <cylinder length="${l}" radius="${r + incr}"/>
+            </geometry>
+          </collision>
+          <visual name="${robot_name}_${name_wheel_link}_visual">
+            <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+            <geometry>
+              <cylinder length="${l}" radius="${r + incr}"/>
+            </geometry>
+          </visual>
+      </link>
+
+      <gazebo reference="${robot_name}_${name_wheel_link}">
+        <kp>${kp_wheel}</kp>
+        <kd>${kd_wheel}</kd>
+        <mu1>${mu1_wheel}</mu1>
+        <mu2>${mu2_wheel}</mu2>
+        <material>Gazebo/White</material>
+      </gazebo>
+
+
+      <joint name="${robot_name}_${name_wheel_link}_joint" type="continuous">
+        <origin rpy="0 0 0" xyz="${origin_xyz}"/>
+        <child link="${robot_name}_${name_wheel_link}"/>
+        <parent link="${parent}"/>
+        <axis rpy="0 0 0" xyz="0 1 0"/>
+        <limit effort="10000" velocity="1000"/>
+        <joint_properties damping="1.0" friction="1.0"/>
+      </joint>
+
+  </xacro:macro >
+
+
+</robot>

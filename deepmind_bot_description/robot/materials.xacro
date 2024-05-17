@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<robot>
+  <material name="red">
+      <color rgba="1.0 0.0 0.0 1"/>
+  </material>
+
+  <material name="green_light">
+      <color rgba="0.0 1.0 0.0 1"/>
+  </material>
+
+  <material name="green_dark">
+    <color rgba="0.0 0.5 0.0 1"/>
+  </material>
+
+  <material name="blue">
+      <color rgba="0.0 0.0 1.0 1"/>
+  </material>
+
+  <material name="yellow">
+      <color rgba="1.0 1.0 0.0 1"/>
+  </material>
+
+  <material name="black">
+      <color rgba="0.0 0.0 0.0 1"/>
+  </material>
+
+  <material name="white">
+      <color rgba="1.0 1.0 1.0 1"/>
+  </material>
+
+  <material name="box_bot_blue">
+      <color rgba="0.088656 0.428691 0.491021 1"/>
+  </material>
+</robot>

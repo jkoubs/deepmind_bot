@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- Constants -->
+	<xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:property name="base_name" value="chassis"/>
+    <xacro:property name="base_box_mass" value="${base_box_factor * 1.0}"/>
+    <xacro:property name="base_box_x" value="${base_box_factor * 0.3972}"/>
+    <xacro:property name="base_box_y" value="${base_box_factor * 0.3972}"/>
+    <xacro:property name="base_box_z" value="${base_box_factor * 0.1327}"/>
+
+    <!-- Wheels -->
+	<xacro:property name="wheel_radius" value="${base_box_z / 4.0}"/>
+    <xacro:property name="wheel_width" value="0.001"/>
+    <xacro:property name="wheel_dis_factor" value="0.6"/>
+    <xacro:property name="wheel_dis" value="${wheel_radius*wheel_dis_factor}"/>
+    
+    <xacro:property name="wheel_increment" value="0.010"/>
+    <xacro:property name="mu1_wheel" value="0.5"/>
+    <xacro:property name="mu2_wheel" value="0.5"/>
+    <xacro:property name="kp_wheel" value="10000000000000000000000000.0"/>
+    <xacro:property name="kd_wheel" value="10000000000000000000000000.0"/>
+
+    <xacro:property name="wheel_separation" value="${base_box_x}"/>
+    <xacro:property name="wheel_diameter" value="${(base_box_z / 2.0) + 2.0 * wheel_increment}"/>
+    <xacro:property name="max_wheel_torque" value="1.0"/>
+    <xacro:property name="max_wheel_acceleration" value="2.0"/>
+
+    <!--Caster Wheels-->
+    <xacro:property name="dummy_length" value="0.001"/>
+
+
+    <!-- Sensors -->
+    <xacro:property name="sensor_mass" value="0.01"/>
+    <xacro:property name="camera_box_x" value="0.02"/>
+    <xacro:property name="camera_box_y" value="0.01"/>
+    <xacro:property name="camera_box_z" value="0.01"/>
+
+    <!-- Oberc Astra-->
+    <xacro:property name="orbbec_astra_scale" value="1.0"/>
+    <!-- RGB sensor - cam -->
+    <xacro:property name="orbbec_astra_rel_rgb_px"   value="0.0" />
+    <xacro:property name="orbbec_astra_rel_rgb_py"   value="-0.0125" />
+    <xacro:property name="orbbec_astra_rel_rgb_pz"   value="-0.0150" />  
+    <!-- IR sensor - depth -->
+    <xacro:property name="orbbec_astra_depth_rel_rgb_px" value="0.0" />
+    <xacro:property name="orbbec_astra_depth_rel_rgb_py" value="0.0250" />
+    <xacro:property name="orbbec_astra_depth_rel_rgb_pz" value="0.0" />
+
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+
+    <!-- Arms -->
+    <xacro:property name="arm_effort" value="0.1" />
+
+
+</robot>

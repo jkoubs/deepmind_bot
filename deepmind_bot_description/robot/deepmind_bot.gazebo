@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+    <xacro:macro  name="deepmind_bot_gazebo_systems" params="robot_name">
+        <gazebo>
+                <plugin name="${robot_name}_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
+                <update_rate>30</update_rate>
+
+                <joint_name>${robot_name}_left_wheel_joint</joint_name>
+                <joint_name>${robot_name}_right_wheel_joint</joint_name>
+                <joint_name>${robot_name}_front_yaw_joint</joint_name>
+                <joint_name>${robot_name}_back_yaw_joint</joint_name>
+                <joint_name>${robot_name}_front_roll_joint</joint_name>
+                <joint_name>${robot_name}_back_roll_joint</joint_name>
+                <joint_name>${robot_name}_front_pitch_joint</joint_name>
+                <joint_name>${robot_name}_back_pitch_joint</joint_name>
+                
+                </plugin>
+        </gazebo>
+
+        <!-- Differential drive -->
+        <gazebo>
+            <plugin filename="libgazebo_ros_diff_drive.so" name="${robot_name}_differential_drive_controller">
+
+            <!-- wheels -->
+            <!-- wheels RMF COMPAT -->
+            <left_joint>${robot_name}_left_wheel_joint</left_joint>
+            <right_joint>${robot_name}_right_wheel_joint</right_joint>
+            
+            <!-- kinematics -->
+            <wheel_separation>${wheel_separation}</wheel_separation>
+            <wheel_diameter>${wheel_diameter}</wheel_diameter>
+
+            <!-- limits -->
+            <max_wheel_torque>${max_wheel_torque}</max_wheel_torque>
+            <max_wheel_acceleration>${max_wheel_acceleration}</max_wheel_acceleration>
+
+            <!-- output -->
+            <publish_odom>true</publish_odom>
+            <publish_odom_tf>true</publish_odom_tf>
+
+            <odometry_frame>${robot_name}_odom</odometry_frame>
+            <robot_base_frame>${robot_name}_base_link</robot_base_frame>
+
+            </plugin>
+        </gazebo>
+
+    </xacro:macro >
+
+
+    
+</robot>

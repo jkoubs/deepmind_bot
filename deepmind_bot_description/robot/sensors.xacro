@@ -1,0 +1,338 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <xacro:macro name="camera_rgb" params="robot_name parent_name origin_xyz camera_ROLL camera_PITCH camera_YAW">
+
+    <link name="${robot_name}_rgb_camera_link_frame">
+        <!-- <visual>
+        <geometry>
+            <cylinder length="0.01" radius="0.005"/>
+        </geometry>
+        </visual> -->
+    </link>
+
+    <joint name="${robot_name}_rgb_camera_link_frame_joint" type="fixed">
+        <origin rpy="${camera_ROLL} ${camera_PITCH} ${camera_YAW}" xyz="${origin_xyz}"/>
+        <parent link="${parent_name}" />
+        <child link="${robot_name}_rgb_camera_link_frame" />
+        <axis xyz="0 0 0"/>
+    </joint>
+
+    <gazebo reference="${robot_name}_rgb_camera_link_frame">
+        <sensor name="${robot_name}_camera" type="camera">
+          <camera>
+            <horizontal_fov>1.3962634</horizontal_fov> <!-- Field of view -->
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.02</near>
+              <far>25.0</far>
+            </clip>
+            <always_on>1</always_on>
+            <update_rate>24</update_rate>
+          </camera>
+          <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+            <ros>
+              <namespace>${robot_name}</namespace>
+            </ros>
+            <cameraName>${robot_name}_rgb_camera</cameraName>
+            <imageTopicName>image_raw</imageTopicName>
+            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <frameName>${robot_name}_rgb_camera_link_frame</frameName>
+            <hackBaseline>0.07</hackBaseline>
+          </plugin>
+        </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+
+  <xacro:macro name="camera_rgb_wideangle" params="robot_name parent_name origin_xyz camera_ROLL camera_PITCH camera_YAW">
+
+    <link name="${robot_name}_rgb_wa_camera_link_frame">
+        <!-- <visual>
+        <geometry>
+            <cylinder length="0.01" radius="0.005"/>
+        </geometry>
+        </visual> -->
+    </link>
+
+    <joint name="${robot_name}_rgb_wa_camera_link_frame_joint" type="fixed">
+        <origin rpy="${camera_ROLL} ${camera_PITCH} ${camera_YAW}" xyz="${origin_xyz}"/>
+        <parent link="${parent_name}" />
+        <child link="${robot_name}_rgb_wa_camera_link_frame" />
+        <axis xyz="0 0 0"/>
+    </joint>
+
+    <gazebo reference="${robot_name}_rgb_wa_camera_link_frame">
+        <sensor name="${robot_name}_camera" type="wideanglecamera">
+          <camera>
+            <horizontal_fov>1.0472</horizontal_fov>
+            <image>
+              <width>320</width>
+              <height>240</height>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+            <lens>
+              <type>custom</type>
+              <custom_function>
+                <c1>1.05</c1>
+                <c2>4</c2>
+                <f>1.0</f>
+                <fun>tan</fun>
+              </custom_function>
+              <scale_to_hfov>true</scale_to_hfov>
+              <cutoff_angle>3.1415</cutoff_angle>
+              <env_texture_size>512</env_texture_size>
+            </lens>
+            <always_on>1</always_on>
+            <update_rate>30</update_rate>
+          </camera>
+          <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+            <ros>
+              <namespace>${robot_name}</namespace>
+            </ros>
+            <cameraName>${robot_name}_rgb_camera</cameraName>
+            <imageTopicName>image_raw</imageTopicName>
+            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <frameName>${robot_name}_rgb_wa_camera_link_frame</frameName>
+            <hackBaseline>0.07</hackBaseline>
+          </plugin>
+        </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+
+  
+  <xacro:macro name="laser_scan" params="robot_name parent_name origin_xyz sensor_YAW">
+      <link name="${robot_name}_laser_scan_model_link">
+        <visual name="${robot_name}_visual_laser_scan_link">
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <geometry>
+            <mesh filename="package://deepmind_bot_description/meshes/laser.dae" scale="1.0 1.0 1.0"/>
+          </geometry>
+        </visual>
+
+        <collision name="${robot_name}_collision_laser_scan_link">
+          <origin rpy="0 0 0" xyz="0 0 0.0204"/>
+          <geometry>
+            <cylinder length="0.0758" radius="0.03"/>
+          </geometry>
+        </collision>
+
+        <inertial>
+
+          <mass value="0.01"/>
+          <origin rpy="0 0 0" xyz="0 0 0.0204"/>
+          <inertia ixx="6.066578520833334e-06" ixy="0" ixz="0" iyy="6.066578520833334e-06" iyz="0" izz="9.365128684166666e-06"/>
+        </inertial>
+      </link>
+
+
+    <joint name="${robot_name}_laser_scan_model_link_joint" type="fixed">
+        <origin xyz="${origin_xyz}" rpy="0 0 ${sensor_YAW}" />
+        <parent link="${parent_name}" />
+        <child link="${robot_name}_laser_scan_model_link" />
+    </joint>
+
+    <link name="${robot_name}_laser_scan_frame">
+    </link>
+
+    <joint name="${robot_name}_laser_scan_frame_joint" type="fixed">
+        <origin xyz="0 0 0.03" rpy="0 0 ${sensor_YAW}" />
+        <parent link="${robot_name}_laser_scan_model_link" />
+        <child link="${robot_name}_laser_scan_frame" />
+    </joint>
+
+    <gazebo reference="${robot_name}_laser_scan_frame">
+      <sensor name="sensor_ray" type="ray">
+          <pose>0 0 0 0 0 0</pose>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>200</samples>
+                <resolution>1.0</resolution>
+                <min_angle>-2.2</min_angle>
+                <max_angle>2.2</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>30.0</max>
+            </range>
+          </ray>
+          <always_on>true</always_on>
+          <visualize>true</visualize>
+          <update_rate>100.0</update_rate>
+          <plugin name="laser" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+              <namespace>${robot_name}</namespace>
+              <remapping>~/out:=laser_scan</remapping>
+            </ros>
+            <frame_name>${robot_name}_laser_scan_frame</frame_name>
+            <output_type>sensor_msgs/LaserScan</output_type>
+          </plugin>
+        </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+
+<xacro:macro name="point_cloud_sensor" params="robot_name parent_name sensor_name origin_xyz sensor_YAW">
+
+  <link name='${robot_name}_pointcloud_link'>
+        <visual>
+        <geometry>
+            <cylinder length="0.01" radius="0.005"/>
+        </geometry>
+        </visual>
+	</link>
+
+  <joint name="${robot_name}_pointcloud_link_joint" type="fixed">
+		<origin rpy="0 0 ${sensor_YAW}" xyz="${origin_xyz}"/>
+		<parent link="${parent_name}"/>
+		<child link="${robot_name}_pointcloud_link"/>
+	</joint>
+
+
+    <gazebo reference="${robot_name}_pointcloud_link">
+        <sensor type="ray" name="${robot_name}_pointcloud_sensor">
+            <ray>
+            <scan>
+                <horizontal>
+                    <samples>50</samples>
+                    <resolution>1.0</resolution>
+                    <min_angle>-1.0</min_angle>
+                    <max_angle>1.0</max_angle>
+                </horizontal>
+                <vertical>
+                    <samples>50</samples>
+                    <resolution>1.0</resolution>
+                    <min_angle>-1.0</min_angle>
+                    <max_angle>1.0</max_angle>
+                </vertical>
+            </scan>
+            <range>
+                <min>0.10</min>
+                <max>5.0</max>
+                <resolution>0.01</resolution>
+            </range>
+            <!-- Using gazebo's noise instead of plugin's -->
+            <noise>
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.01</stddev>
+            </noise>
+            </ray>
+            <!-- Using gazebo's update rate instead of plugin's -->
+            <update_rate>30</update_rate>
+            <plugin name="gazebo_ros_block_laser_controller" filename="libgazebo_ros_ray_sensor.so">
+            <!-- Change namespace and output topic so published topic is /rrbot/laser/pointcloud -->
+            <ros>
+                <namespace>${robot_name}</namespace>
+                <argument>--ros-args --remap ~/out:=pointcloud</argument>
+                
+            </ros>
+            <!-- Set output to sensor_msgs/PointCloud to get same output type as gazebo_ros_block_laser -->
+            <output_type>sensor_msgs/PointCloud</output_type>
+            <frame_name>${robot_name}_pointcloud_link</frame_name>
+            <!-- min_intensity instead of hokuyoMinIntensity -->
+            <min_intensity>100.0</min_intensity>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+
+</xacro:macro>
+
+
+
+<xacro:macro name="camera_rgbd" params="robot_name parent_name origin_xyz camera_ROLL camera_PITCH camera_YAW">
+
+    <link name="${robot_name}_rgbd_camera_link_frame">
+        <visual>
+        <geometry>
+            <cylinder length="0.01" radius="0.005"/>
+        </geometry>
+        </visual>
+    </link>
+
+    <joint name="${robot_name}_rgbd_camera_link_frame_joint" type="fixed">
+        <origin rpy="${camera_ROLL} ${camera_PITCH} ${camera_YAW}" xyz="${origin_xyz}"/>
+        <parent link="${parent_name}" />
+        <child link="${robot_name}_rgbd_camera_link_frame" />
+        <axis xyz="0 0 0"/>
+    </joint>
+
+    <!-- EXtra joints for rgbd camera -->
+    <xacro:property name="r430_cam_depth_px" value="0.00"/>
+    <xacro:property name="r430_cam_depth_py" value="-0.0115"/>
+    <xacro:property name="r430_cam_depth_pz" value="0.0"/>
+
+    <link name="${robot_name}_camera_depth_frame"/>
+    
+    <joint name="${robot_name}_camera_depth_joint" type="fixed">
+      <origin xyz="${r430_cam_depth_px} ${r430_cam_depth_py} ${r430_cam_depth_pz}" rpy="0 0 0"/>
+      <parent link="${robot_name}_rgbd_camera_link_frame"/>
+      <child link="${robot_name}_camera_depth_frame" />
+    </joint>
+   
+
+    <link name="${robot_name}_camera_depth_optical_frame"/>
+
+    <joint name="${robot_name}_camera_depth_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}" />
+      <parent link="${robot_name}_camera_depth_frame" />
+      <child link="${robot_name}_camera_depth_optical_frame" />
+    </joint>
+
+    <gazebo reference="${robot_name}_rgbd_camera_link_frame">
+      <sensor type="depth" name="${robot_name}_depth_sensor">
+        <always_on>true</always_on>
+        <update_rate>5.0</update_rate>
+        <camera>
+          <horizontal_fov>${90.0*PI/260.0}</horizontal_fov>
+          <image>
+            <format>R8G8B8</format>
+            <width>640</width>
+            <height>480</height>
+          </image>
+          <clip>
+            <near>0.01</near>
+            <far>2.0</far>
+          </clip>
+        </camera>
+        <plugin name="${robot_name}_rgbd_controller" filename="libgazebo_ros_camera.so">
+          <cameraName>${robot_name}</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>10</updateRate>
+          <imageTopicName>rgb/image_raw</imageTopicName>
+          <depthImageTopicName>depth/image_raw</depthImageTopicName>
+          <pointCloudTopicName>depth/points</pointCloudTopicName>
+          <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+          <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+          <frame_name>${robot_name}_camera_depth_optical_frame</frame_name>
+          <baseline>0.1</baseline>
+          <distortion_k1>0.0</distortion_k1>
+          <distortion_k2>0.0</distortion_k2>
+          <distortion_k3>0.0</distortion_k3>
+          <distortion_t1>0.0</distortion_t1>
+          <distortion_t2>0.0</distortion_t2>
+          <pointCloudCutoff>0.1</pointCloudCutoff>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+</xacro:macro>
+
+
+
+</robot>

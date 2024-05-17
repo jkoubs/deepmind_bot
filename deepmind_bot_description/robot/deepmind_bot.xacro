@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<robot name="deepmind_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+    <xacro:arg name="robot_name" default="deepmind_bot_default"/>
+    <xacro:property name="general_robot_name" value="$(arg robot_name)"/>
+
+    <xacro:include filename="$(find deepmind_bot_description)/robot/materials.xacro" />
+    <xacro:include filename="$(find deepmind_bot_description)/robot/properties.xacro" />
+    <xacro:include filename="$(find deepmind_bot_description)/robot/properties_common.xacro" />
+    <xacro:include filename="$(find deepmind_bot_description)/robot/macros.xacro" />
+    <xacro:include filename="$(find deepmind_bot_description)/robot/wheels.xacro" />
+    <xacro:include filename="$(find deepmind_bot_description)/robot/caster_wheels.xacro" />  
+    <xacro:include filename="$(find deepmind_bot_description)/robot/deepmind_bot_base.xacro" />
+    <xacro:include filename="$(find deepmind_bot_description)/robot/deepmind_bot_body.xacro" />
+    <xacro:include filename="$(find deepmind_bot_description)/robot/sensors.xacro" />
+    <xacro:include filename="$(find deepmind_bot_description)/robot/deepmind_bot.gazebo" />
+
+
+
+    <xacro:deepmind_bot_base robot_name="$(arg robot_name)"/>
+
+    <xacro:deepmind_bot_body parent="$(arg robot_name)_chassis" origin_xyz="0 0 0.133428" robot_name="$(arg robot_name)"/>
+
+    <xacro:wheel parent="$(arg robot_name)_chassis" child="$(arg robot_name)_right_wheel" origin_xyz="0 ${-1.0 * base_box_x*0.7 / 2.0} ${wheel_dis}" robot_name="$(arg robot_name)" name_wheel_link="right_wheel" r="${wheel_radius}" l="${wheel_width}" incr="${wheel_increment}"/>
+    <xacro:wheel parent="$(arg robot_name)_chassis" child="$(arg robot_name)_left_wheel" origin_xyz="0 ${base_box_x*0.7 / 2.0} ${wheel_dis}" robot_name="$(arg robot_name)" name_wheel_link="left_wheel" r="${wheel_radius}" l="${wheel_width}" incr="${wheel_increment}"/>
+    <xacro:caster_wheel robot_name="$(arg robot_name)" parent="$(arg robot_name)_chassis" caster_wheel_name="front" origin_xyz="${(base_box_x / 2.0) - wheel_increment} 0 ${-1.0*(wheel_radius-wheel_dis)}" radius="${wheel_increment}" legth="${dummy_length}"/>
+    <xacro:caster_wheel robot_name="$(arg robot_name)" parent="$(arg robot_name)_chassis" caster_wheel_name="back" origin_xyz="${(-1.0 *base_box_x / 2.0) + wheel_increment} 0 ${-1.0*(wheel_radius-wheel_dis)}" radius="${wheel_increment}" legth="${dummy_length}"/>
+    <xacro:caster_wheel robot_name="$(arg robot_name)" parent="$(arg robot_name)_chassis" caster_wheel_name="frontl" origin_xyz="${(base_box_x / 2.0) - wheel_increment} ${base_box_x*0.7 / 2.0} ${-1.0*(wheel_radius-wheel_dis)}" radius="${wheel_increment}" legth="${dummy_length}"/>
+    <xacro:caster_wheel robot_name="$(arg robot_name)" parent="$(arg robot_name)_chassis" caster_wheel_name="backl" origin_xyz="${(-1.0 *base_box_x / 2.0) + wheel_increment} ${base_box_x*0.7 / 2.0} ${-1.0*(wheel_radius-wheel_dis)}" radius="${wheel_increment}" legth="${dummy_length}"/>
+    <xacro:caster_wheel robot_name="$(arg robot_name)" parent="$(arg robot_name)_chassis" caster_wheel_name="frontr" origin_xyz="${(base_box_x / 2.0) - wheel_increment} ${-1.0 * base_box_x*0.7 / 2.0} ${-1.0*(wheel_radius-wheel_dis)}" radius="${wheel_increment}" legth="${dummy_length}"/>
+    <xacro:caster_wheel robot_name="$(arg robot_name)" parent="$(arg robot_name)_chassis" caster_wheel_name="backr" origin_xyz="${(-1.0 *base_box_x / 2.0) + wheel_increment} ${-1.0 * base_box_x*0.7 / 2.0} ${-1.0*(wheel_radius-wheel_dis)}" radius="${wheel_increment}" legth="${dummy_length}"/>
+    
+    
+    <xacro:deepmind_bot_gazebo_systems robot_name="$(arg robot_name)"/>
+
+
+    <xacro:camera_rgb robot_name="$(arg robot_name)" parent_name="$(arg robot_name)_head" origin_xyz="0.013264 -0.20236 0.016" camera_ROLL="0.0" camera_PITCH="0.0" camera_YAW="-1.57"/>
+    <xacro:laser_scan robot_name="$(arg robot_name)" parent_name="$(arg robot_name)_chassis" origin_xyz="${base_box_x / 2.0} 0.0 ${base_box_x / 3.5}" sensor_YAW="0.0"/>
+  
+    <xacro:camera_rgbd robot_name="$(arg robot_name)" parent_name="$(arg robot_name)_head" origin_xyz="0.013264 -0.20236 0.016" camera_ROLL="${-PI/2}" camera_PITCH="0.0" camera_YAW="${-PI/2}"/>
+
+
+    <!-- <xacro:point_cloud_sensor robot_name="$(arg robot_name)" parent_name="$(arg robot_name)_laser" sensor_name="lydar" origin_xyz="0 -0.039453 0.02519" sensor_YAW="-1.57"/> -->
+
+
+
+    <!-- <xacro:include filename="$(find deepmind_bot_description)/robot/deepmind_bot_arm.xacro" />    
+    <xacro:deepmind_bot_arm parent="$(arg robot_name)_middle_base" origin_xyz="0.11504 0 0.1227" yaw_angle="3.1416" robot_name="$(arg robot_name)"/> -->
+
+    <xacro:include filename="$(find deepmind_bot_description)/robot/deepmind_bot.ros2_control.xacro" />
+    <xacro:config_ctr_gazebo robot_name="$(arg robot_name)"/>
+
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
+            <parameters>$(find deepmind_bot_description)/config/controller_configuration.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+</robot>

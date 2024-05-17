@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro  name="deepmind_bot_body" params="parent origin_xyz robot_name">
+
+      <link name="${robot_name}_bottom_base">
+        <visual>
+          <geometry>
+              <mesh filename="package://deepmind_bot_description/meshes/bottom_base.dae" scale="${base_box_factor} ${base_box_factor} ${base_box_factor}"/>
+          </geometry>
+        </visual>
+
+        <collision>
+          <origin rpy="0 0 0" xyz="0 0 0.1225"/>
+          <geometry>
+              <cylinder length="0.245" radius="0.1"/>
+          </geometry>
+        </collision>
+
+        <inertial>
+          <mass value="0.5"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <inertia ixx="0.0008333333333333335" ixy="0" ixz="0" iyy="0.0008333333333333335" iyz="0" izz="0.0008333333333333335"/>
+        </inertial>
+
+      </link>
+
+      <joint name="${robot_name}_bottom_base_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="${origin_xyz}" />
+        <parent link="${parent}" />
+        <child link="${robot_name}_bottom_base" />
+      </joint>
+
+      <!-- Middle -->
+
+      <link name="${robot_name}_middle_base">
+        <visual>
+          <geometry>
+              <mesh filename="package://deepmind_bot_description/meshes/middle_base.dae" scale="${base_box_factor} ${base_box_factor} ${base_box_factor}"/>
+          </geometry>
+        </visual>
+
+        <collision>
+          <origin rpy="0 0 0" xyz="0 0 0.107"/>
+          <geometry>
+              <cylinder length="0.245" radius="0.1"/>
+          </geometry>
+        </collision>
+
+        <inertial>
+          <mass value="0.5"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <inertia ixx="0.0008333333333333335" ixy="0" ixz="0" iyy="0.0008333333333333335" iyz="0" izz="0.0008333333333333335"/>
+        </inertial>
+
+      </link>
+
+      <joint name="${robot_name}_middle_base_joint" type="revolute">
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973" />
+        <origin rpy="0 0 1.57" xyz="0 0 0.245867" />
+        <parent link="${robot_name}_bottom_base" />
+        <child link="${robot_name}_middle_base" />
+        <axis xyz="0 0 1" />
+        <limit effort="87" lower="-2.9671" upper="2.9671" velocity="2.3925" />
+      </joint>
+
+
+      <!-- LaserBase -->
+
+      <link name="${robot_name}_laser_base">
+        <visual>
+          <geometry>
+              <mesh filename="package://deepmind_bot_description/meshes/laser_base.dae" scale="${base_box_factor} ${base_box_factor} ${base_box_factor}"/>
+          </geometry>
+        </visual>
+
+        <collision>
+          <origin rpy="0 0 0" xyz="0 0 0.184"/>
+          <geometry>
+              <cylinder length="0.368" radius="0.1"/>
+          </geometry>
+        </collision>
+
+        <inertial>
+          <mass value="0.5"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <inertia ixx="0.0008333333333333335" ixy="0" ixz="0" iyy="0.0008333333333333335" iyz="0" izz="0.0008333333333333335"/>
+        </inertial>
+
+      </link>
+
+      <joint name="${robot_name}_laser_base_joint" type="fixed">
+        <origin rpy="0 0 1.57" xyz="0 0 0.49196" />
+        <parent link="${robot_name}_bottom_base" />
+        <child link="${robot_name}_laser_base" />
+      </joint>
+
+    <!-- Separator -->
+
+      <link name="${robot_name}_separator_ring_link">
+        <visual>
+          <geometry>
+              <mesh filename="package://deepmind_bot_description/meshes/separator_ring.dae" scale="${base_box_factor} ${base_box_factor} ${base_box_factor}"/>
+          </geometry>
+        </visual>
+
+      </link>
+
+      <joint name="${robot_name}__separator_ring_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.23554" />
+        <parent link="${robot_name}_middle_base" />
+        <child link="${robot_name}_separator_ring_link" />
+        <axis xyz="0 0 1" />
+        <limit effort="87" velocity="2.3925" />
+      </joint>
+
+
+      <!-- Laser -->
+
+      <link name="${robot_name}_laser">
+        <visual>
+          <geometry>
+              <mesh filename="package://deepmind_bot_description/meshes/laser.dae" scale="${base_box_factor} ${base_box_factor} ${base_box_factor}"/>
+          </geometry>
+        </visual>
+
+      </link>
+
+      <joint name="${robot_name}_laser_joint" type="fixed">
+        <origin rpy="0.175527 0 0" xyz="0 -0.088567 0.14095" />
+        <parent link="${robot_name}_laser_base" />
+        <child link="${robot_name}_laser" />
+      </joint>
+
+    <!-- Head Base -->
+
+      <link name="${robot_name}_head_base">
+        <visual>
+          <geometry>
+              <mesh filename="package://deepmind_bot_description/meshes/head_base.dae" scale="${base_box_factor} ${base_box_factor} ${base_box_factor}"/>
+          </geometry>
+        </visual>
+
+        <collision>
+          <origin rpy="0 0 0" xyz="0 0 0.092"/>
+          <geometry>
+              <cylinder length="0.184" radius="0.08"/>
+          </geometry>
+        </collision>
+
+        <inertial>
+          <mass value="0.05"/>
+          <origin rpy="0 0 0" xyz="0 0 0.035"/>
+          <inertia ixx="3.166666666666667e-05" ixy="0" ixz="0" iyy="3.166666666666667e-05" iyz="0" izz="2.25e-05"/>
+        </inertial>
+
+      </link>
+
+      <joint name="${robot_name}_head_base_joint" type="revolute">
+        <origin rpy="0 0 0" xyz="0 0 0.3685" />
+        <parent link="${robot_name}_laser_base" />
+        <child link="${robot_name}_head_base" />
+        <axis xyz="0 0 1" />
+        <limit effort="87" lower="-2.9671" upper="2.9671" velocity="2.3925" />
+        <dynamics friction="3.48"/>
+      </joint>
+
+
+    <!-- Head  -->
+
+      <link name="${robot_name}_head">
+        <visual>
+          <geometry>
+              <mesh filename="package://deepmind_bot_description/meshes/head.dae" scale="${base_box_factor} ${base_box_factor} ${base_box_factor}"/>
+          </geometry>
+        </visual>
+
+        <collision>
+          <origin rpy="0 0 0" xyz="0 -0.126 0"/>
+          <geometry>
+            <box size="0.252 0.234 0.121"/> 
+          </geometry>
+        </collision>
+
+        <inertial>
+          <mass value="0.05"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <inertia ixx="3.166666666666667e-05" ixy="0" ixz="0" iyy="3.166666666666667e-05" iyz="0" izz="2.25e-05"/>
+        </inertial>
+
+      </link>
+
+      <joint name="${robot_name}_head_joint" type="revolute">
+        <origin rpy="0 0 0" xyz="0 -0.1 0.12256" />
+        <parent link="${robot_name}_head_base" />
+        <child link="${robot_name}_head" />
+        <axis xyz="1 0 0" />
+        <limit effort="87" lower="-1.57" upper="1.57" velocity="2.3925" />
+        <dynamics friction="3.48"/>
+      </joint>
+
+
+
+    </xacro:macro >
+
+</robot>

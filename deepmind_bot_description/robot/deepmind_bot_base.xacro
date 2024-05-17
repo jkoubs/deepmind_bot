@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro  name="deepmind_bot_base" params="robot_name">
+
+      <link name="${robot_name}_base_link">
+      </link>
+
+      <link name="${robot_name}_chassis">
+        <visual>
+          <geometry>
+              <mesh filename="package://deepmind_bot_description/meshes/mobile_base.dae" scale="${base_box_factor} ${base_box_factor} ${base_box_factor}"/>
+          </geometry>
+        </visual>
+
+        <collision>
+          <origin rpy="0 0 0" xyz="0 0 0.03"/>
+          <geometry>
+           <box size="0.397 0.397 0.05"/> 
+          </geometry>
+        </collision>
+
+        <inertial>
+          <mass value="10.0"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <inertia ixx="0.146082" ixy="0" ixz="0" iyy="0.146082" iyz="0" izz="0.2626816666666667"/>
+        </inertial>
+
+      </link>
+
+      <joint name="${robot_name}_base_link_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <parent link="${robot_name}_base_link" />
+        <child link="${robot_name}_chassis" />
+      </joint>
+
+    </xacro:macro >
+
+</robot>
